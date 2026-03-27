@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: real-or-fake-config
+  labels:
+    app: real-or-fake
+data:
+  llm-api-url: "https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1"
+  model-name: "Mistral-Small-24B-W8A8"

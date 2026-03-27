@@ -1,0 +1,62 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: realorfake-backend
+  namespace: real-or-fake
+spec:
+  triggers:
+  - type: GitHub
+    github:
+      secret: github-webhook-secret
+  source:
+    type: Git
+    git:
+      uri: https://github.com/soyr-redhat/real-or-fake-synthetic-data-demo.git
+    contextDir: backend
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Containerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: realorfake-backend:latest
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: realorfake-frontend
+  namespace: real-or-fake
+spec:
+  triggers:
+  - type: GitHub
+    github:
+      secret: github-webhook-secret
+  source:
+    type: Git
+    git:
+      uri: https://github.com/soyr-redhat/real-or-fake-synthetic-data-demo.git
+    contextDir: frontend
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Containerfile
+      buildArgs:
+      - name: VITE_API_URL
+        value: https://realorfake-backend-real-or-fake.apps.ocp.cloud.rhai-tmm.dev
+  output:
+    to:
+      kind: ImageStreamTag
+      name: realorfake-frontend:latest
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: realorfake-backend
+  namespace: real-or-fake
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: realorfake-frontend
+  namespace: real-or-fake
