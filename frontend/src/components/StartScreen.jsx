@@ -13,23 +13,23 @@ export default function StartScreen({ onStart, loading }) {
         <h3 className="text-2xl font-display font-semibold mb-6 text-redhat-red">How to Play</h3>
         <div className="grid md:grid-cols-3 gap-6 text-left">
           <div className="bg-redhat-dark-elevated border border-redhat-grid-line p-6 rounded-lg">
-            <div className="text-3xl mb-3">1️⃣</div>
-            <h4 className="font-semibold mb-2 text-redhat-text-primary">Compare Data</h4>
-            <p className="text-sm text-redhat-text-secondary">
+            <div className="text-4xl mb-3 font-display text-redhat-red">01</div>
+            <h4 className="font-display font-semibold mb-2 text-redhat-text-primary">Compare Data</h4>
+            <p className="text-sm text-redhat-text-secondary font-text">
               You'll see two similar pieces of data side-by-side: one real, one AI-generated
             </p>
           </div>
-          <div className="bg-gray-900 p-6 rounded-lg">
-            <div className="text-3xl mb-3">2️⃣</div>
-            <h4 className="font-semibold mb-2">Make Your Guess</h4>
-            <p className="text-sm text-gray-400">
+          <div className="bg-redhat-dark-elevated border border-redhat-grid-line p-6 rounded-lg">
+            <div className="text-4xl mb-3 font-display text-redhat-red">02</div>
+            <h4 className="font-display font-semibold mb-2 text-redhat-text-primary">Make Your Guess</h4>
+            <p className="text-sm text-redhat-text-secondary font-text">
               Click the option you think is the REAL data
             </p>
           </div>
-          <div className="bg-gray-900 p-6 rounded-lg">
-            <div className="text-3xl mb-3">3️⃣</div>
-            <h4 className="font-semibold mb-2">Learn & Score</h4>
-            <p className="text-sm text-gray-400">
+          <div className="bg-redhat-dark-elevated border border-redhat-grid-line p-6 rounded-lg">
+            <div className="text-4xl mb-3 font-display text-redhat-red">03</div>
+            <h4 className="font-display font-semibold mb-2 text-redhat-text-primary">Learn & Score</h4>
+            <p className="text-sm text-redhat-text-secondary font-text">
               Get instant feedback, build your streak, and climb the leaderboard!
             </p>
           </div>
@@ -85,9 +85,9 @@ export default function StartScreen({ onStart, loading }) {
         <h4 className="font-semibold mb-3 text-redhat-text-primary">Data Categories You'll See:</h4>
         <div className="flex flex-wrap justify-center gap-3 text-sm font-mono">
           <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">Customer Reviews</span>
-          <span className="bg-gray-700 px-4 py-2 rounded-full">Product Descriptions</span>
-          <span className="bg-gray-700 px-4 py-2 rounded-full">User Profiles</span>
-          <span className="bg-gray-700 px-4 py-2 rounded-full">Code Snippets</span>
+          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">Product Descriptions</span>
+          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">User Profiles</span>
+          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">Code Snippets</span>
         </div>
       </div>
     </div>

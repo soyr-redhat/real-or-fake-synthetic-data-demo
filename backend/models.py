@@ -45,6 +45,7 @@ class GameSession(BaseModel):
     total_guesses: int
     correct_guesses: int
     difficulty: DifficultyLevel
+    lives: int = 3  # Start with 3 lives
 
 class LeaderboardEntry(BaseModel):
     """Leaderboard entry"""

@@ -16,10 +16,21 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
     ? Math.round((session.correct_guesses / session.total_guesses) * 100)
     : 0
 
+  // Auto end game when lives reach 0
+  if (session.lives === 0 && guessResult) {
+    setTimeout(() => onEndGame(), 2000)
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Stats Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+        <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
+          <div className="text-2xl font-mono font-bold text-redhat-red">
+            {session.lives > 0 ? '❤️'.repeat(session.lives) : '💀'}
+          </div>
+          <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Lives</div>
+        </div>
         <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
           <div className="text-2xl font-mono font-bold text-redhat-red">{session.score}</div>
           <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Score</div>
@@ -43,28 +54,33 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
       </div>
 
       {/* Category Selector */}
-      {!guessResult && (
-        <div className="mb-6">
-          <h3 className="text-lg font-display font-semibold mb-3 text-redhat-red">Select Category:</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {CATEGORIES.map(cat => (
-              <button
-                key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
-                disabled={loading}
-                className={`p-3 rounded-lg border-2 transition ${
-                  currentPair?.category === cat.value
-                    ? 'bg-redhat-red border-redhat-red text-white'
-                    : 'bg-redhat-dark-elevated border-redhat-grid-line hover:border-redhat-red'
-                }`}
-              >
-                <div className="text-2xl mb-1">{cat.icon}</div>
-                <div className="text-sm">{cat.label}</div>
-              </button>
-            ))}
-          </div>
+      <div className="mb-6">
+        <h3 className="text-lg font-display font-semibold mb-3 text-redhat-red">Select Category:</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.value}
+              onClick={() => {
+                setSelectedCategory(cat.value)
+                if (guessResult) {
+                  onContinue(cat.value)
+                }
+              }}
+              disabled={loading && !guessResult}
+              className={`p-3 rounded-lg border-2 transition ${
+                currentPair?.category === cat.value
+                  ? 'bg-redhat-red border-redhat-red text-white'
+                  : selectedCategory === cat.value && !currentPair
+                  ? 'bg-redhat-red bg-opacity-20 border-redhat-red'
+                  : 'bg-redhat-dark-elevated border-redhat-grid-line hover:border-redhat-red'
+              }`}
+            >
+              <div className="text-2xl mb-1">{cat.icon}</div>
+              <div className="text-sm">{cat.label}</div>
+            </button>
+          ))}
         </div>
-      )}
+      </div>
 
       {/* Main Comparison */}
       {currentPair && (
@@ -141,17 +157,19 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
             </div>
             <p className="text-lg mb-4 text-redhat-text-primary">{guessResult.explanation}</p>
             <div className="flex justify-center gap-4">
-              <button
-                onClick={() => onContinue(selectedCategory)}
-                className="px-6 py-3 bg-redhat-red hover:bg-redhat-red-hover border border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
-              >
-                Next Challenge
-              </button>
+              {session.lives > 0 && (
+                <button
+                  onClick={() => onContinue(selectedCategory)}
+                  className="px-6 py-3 bg-redhat-red hover:bg-redhat-red-hover border border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
+                >
+                  Next Challenge
+                </button>
+              )}
               <button
                 onClick={onEndGame}
                 className="px-6 py-3 bg-redhat-dark-elevated border border-redhat-grid-line hover:border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
               >
-                End Game
+                {session.lives === 0 ? 'View Results' : 'End Game'}
               </button>
             </div>
           </div>

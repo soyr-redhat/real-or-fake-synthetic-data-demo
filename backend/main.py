@@ -78,7 +78,8 @@ async def start_session(difficulty: DifficultyLevel = DifficultyLevel.MEDIUM):
         streak=0,
         total_guesses=0,
         correct_guesses=0,
-        difficulty=difficulty
+        difficulty=difficulty,
+        lives=3
     )
     active_sessions[session_id] = session
     return session
@@ -159,6 +160,7 @@ async def submit_guess(guess: GuessRequest):
         score_delta = points
     else:
         session.streak = 0
+        session.lives -= 1  # Lose a life on wrong answer
         score_delta = 0
 
     # Generate explanation
@@ -166,7 +168,9 @@ async def submit_guess(guess: GuessRequest):
     if correct:
         explanation += f"Great job! You earned {score_delta} points (streak bonus: {session.streak}x)."
     else:
-        explanation += "Better luck next time! Your streak has been reset."
+        explanation += f"Better luck next time! Your streak has been reset. Lives remaining: {session.lives}"
+        if session.lives == 0:
+            explanation += " - GAME OVER!"
 
     response = GuessResponse(
         correct=correct,
