@@ -31,4 +31,4 @@ deployment/secrets.yaml
 
 # Data
 data/
-*.json
+data/*.json

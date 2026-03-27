@@ -20,42 +20,42 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
     <div className="max-w-6xl mx-auto">
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <div className="bg-gray-800 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-redhat">{session.score}</div>
-          <div className="text-sm text-gray-400">Score</div>
+        <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
+          <div className="text-2xl font-mono font-bold text-redhat-red">{session.score}</div>
+          <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Score</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-500">{session.streak}</div>
-          <div className="text-sm text-gray-400">Streak</div>
+        <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
+          <div className="text-2xl font-mono font-bold text-yellow-400">{session.streak}</div>
+          <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Streak</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-green-500">{session.correct_guesses}</div>
-          <div className="text-sm text-gray-400">Correct</div>
+        <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
+          <div className="text-2xl font-mono font-bold text-green-400">{session.correct_guesses}</div>
+          <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Correct</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-blue-500">{session.total_guesses}</div>
-          <div className="text-sm text-gray-400">Total</div>
+        <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
+          <div className="text-2xl font-mono font-bold text-blue-400">{session.total_guesses}</div>
+          <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Total</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-purple-500">{accuracy}%</div>
-          <div className="text-sm text-gray-400">Accuracy</div>
+        <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
+          <div className="text-2xl font-mono font-bold text-purple-400">{accuracy}%</div>
+          <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Accuracy</div>
         </div>
       </div>
 
       {/* Category Selector */}
       {!guessResult && (
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Select Category:</h3>
+          <h3 className="text-lg font-display font-semibold mb-3 text-redhat-red">Select Category:</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {CATEGORIES.map(cat => (
               <button
                 key={cat.value}
                 onClick={() => setSelectedCategory(cat.value)}
                 disabled={loading}
-                className={`p-3 rounded-lg transition ${
+                className={`p-3 rounded-lg border-2 transition ${
                   currentPair?.category === cat.value
-                    ? 'bg-redhat text-white'
-                    : 'bg-gray-800 hover:bg-gray-700'
+                    ? 'bg-redhat-red border-redhat-red text-white'
+                    : 'bg-redhat-dark-elevated border-redhat-grid-line hover:border-redhat-red'
                 }`}
               >
                 <div className="text-2xl mb-1">{cat.icon}</div>
@@ -70,10 +70,10 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
       {currentPair && (
         <div className="mb-6">
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold mb-2">
+            <h2 className="text-3xl font-display font-bold mb-2 text-redhat-text-primary">
               {categoryInfo.icon} {categoryInfo.label}
             </h2>
-            <p className="text-gray-400">Which one is REAL?</p>
+            <p className="text-redhat-text-secondary font-mono uppercase tracking-wider">Which one is REAL?</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -81,18 +81,18 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
             <button
               onClick={() => !guessResult && onGuess('a')}
               disabled={loading || guessResult}
-              className={`bg-gray-800 p-6 rounded-lg text-left transition transform hover:scale-105 ${
-                !guessResult && !loading ? 'hover:bg-gray-700 cursor-pointer' : ''
+              className={`bg-redhat-dark-elevated border-2 p-6 rounded-lg text-left transition transform hover:scale-105 ${
+                !guessResult && !loading ? 'hover:border-redhat-red cursor-pointer border-redhat-grid-line' : 'border-redhat-grid-line'
               } ${
                 guessResult && guessResult.real_option === 'a'
-                  ? 'ring-4 ring-green-500'
+                  ? 'ring-4 ring-green-400 border-green-400'
                   : guessResult && guessResult.real_option === 'b'
-                  ? 'ring-4 ring-red-500'
+                  ? 'ring-4 ring-redhat-red border-redhat-red'
                   : ''
               }`}
             >
               <div className="flex justify-between items-start mb-3">
-                <span className="text-2xl font-bold text-redhat">Option A</span>
+                <span className="text-2xl font-display font-bold text-redhat-red">Option A</span>
                 {guessResult && guessResult.real_option === 'a' && (
                   <span className="text-green-500 text-xl">✓ REAL</span>
                 )}
@@ -106,18 +106,18 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
             <button
               onClick={() => !guessResult && onGuess('b')}
               disabled={loading || guessResult}
-              className={`bg-gray-800 p-6 rounded-lg text-left transition transform hover:scale-105 ${
-                !guessResult && !loading ? 'hover:bg-gray-700 cursor-pointer' : ''
+              className={`bg-redhat-dark-elevated border-2 p-6 rounded-lg text-left transition transform hover:scale-105 ${
+                !guessResult && !loading ? 'hover:border-redhat-red cursor-pointer border-redhat-grid-line' : 'border-redhat-grid-line'
               } ${
                 guessResult && guessResult.real_option === 'b'
-                  ? 'ring-4 ring-green-500'
+                  ? 'ring-4 ring-green-400 border-green-400'
                   : guessResult && guessResult.real_option === 'a'
-                  ? 'ring-4 ring-red-500'
+                  ? 'ring-4 ring-redhat-red border-redhat-red'
                   : ''
               }`}
             >
               <div className="flex justify-between items-start mb-3">
-                <span className="text-2xl font-bold text-redhat">Option B</span>
+                <span className="text-2xl font-display font-bold text-redhat-red">Option B</span>
                 {guessResult && guessResult.real_option === 'b' && (
                   <span className="text-green-500 text-xl">✓ REAL</span>
                 )}
@@ -132,24 +132,24 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
 
       {/* Result Feedback */}
       {guessResult && (
-        <div className={`p-6 rounded-lg mb-6 ${
-          guessResult.correct ? 'bg-green-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'
+        <div className={`p-6 rounded-lg mb-6 border-2 ${
+          guessResult.correct ? 'bg-green-900 bg-opacity-20 border-green-400' : 'bg-redhat-red bg-opacity-10 border-redhat-red'
         }`}>
           <div className="text-center">
-            <div className="text-4xl mb-3">
+            <div className="text-4xl font-display mb-3">
               {guessResult.correct ? '🎉 Correct!' : '❌ Incorrect'}
             </div>
-            <p className="text-lg mb-4">{guessResult.explanation}</p>
+            <p className="text-lg mb-4 text-redhat-text-primary">{guessResult.explanation}</p>
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => onContinue(selectedCategory)}
-                className="px-6 py-3 bg-redhat hover:bg-redhat-dark rounded-lg font-semibold transition"
+                className="px-6 py-3 bg-redhat-red hover:bg-redhat-red-hover border border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
               >
                 Next Challenge
               </button>
               <button
                 onClick={onEndGame}
-                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold transition"
+                className="px-6 py-3 bg-redhat-dark-elevated border border-redhat-grid-line hover:border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
               >
                 End Game
               </button>
@@ -161,8 +161,8 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
       {/* Loading State */}
       {loading && !currentPair && (
         <div className="text-center py-12">
-          <div className="animate-spin inline-block w-12 h-12 border-4 border-redhat border-t-transparent rounded-full mb-4"></div>
-          <p className="text-gray-400">Generating data pair...</p>
+          <div className="animate-spin inline-block w-12 h-12 border-4 border-redhat-red border-t-transparent rounded-full mb-4"></div>
+          <p className="text-redhat-text-secondary font-mono">Generating data pair...</p>
         </div>
       )}
     </div>

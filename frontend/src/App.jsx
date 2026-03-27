@@ -95,25 +95,65 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <div className="min-h-screen bg-redhat-dark-bg text-white">
+      {/* Red Hat Brand Visual Elements */}
+      <div className="grid-background"></div>
+
       {/* Header */}
-      <header className="bg-black bg-opacity-50 border-b border-red-900">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-redhat">Real or Fake?</h1>
-            <p className="text-sm text-gray-400">Synthetic Data Generation Demo</p>
+      <header className="bg-redhat-dark-surface border-b border-redhat-grid-line relative z-10">
+        <div className="container mx-auto px-4 py-4">
+          <div className="grid grid-cols-3 items-center gap-4">
+            {/* Left: Title */}
+            <div>
+              <h1 className="text-3xl font-display font-bold text-redhat-red">Real or Fake?</h1>
+              <p className="text-redhat-text-secondary mt-1 font-mono text-xs uppercase tracking-wider">Pillar 03 / Synthetic Data Generation Demo</p>
+            </div>
+
+            {/* Center: Session Stats */}
+            {session && (
+              <div className="flex justify-center">
+                <div className="bg-redhat-dark-elevated rounded-lg px-6 py-3 flex items-center gap-4 border border-redhat-grid-line">
+                  <div className="text-center">
+                    <div className="text-redhat-red font-bold text-2xl font-mono">{session.score}</div>
+                    <div className="text-xs text-gray-400">Score</div>
+                  </div>
+                  <div className="text-gray-600 font-bold text-xl">|</div>
+                  <div className="text-center">
+                    <div className="text-yellow-400 font-bold text-2xl font-mono">{session.streak}</div>
+                    <div className="text-xs text-gray-400">Streak</div>
+                  </div>
+                  <div className="text-gray-600 font-bold text-xl">|</div>
+                  <div className="text-center">
+                    <div className="text-green-400 font-bold text-2xl font-mono">
+                      {session.total_guesses > 0 ? Math.round((session.correct_guesses / session.total_guesses) * 100) : 0}%
+                    </div>
+                    <div className="text-xs text-gray-400">Accuracy</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Right: Powered by */}
+            <div className="text-right">
+              <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
+              <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
+            </div>
           </div>
-          <button
-            onClick={() => setShowLeaderboard(!showLeaderboard)}
-            className="px-4 py-2 bg-redhat hover:bg-redhat-dark rounded-lg transition"
-          >
-            {showLeaderboard ? 'Hide' : 'Show'} Leaderboard
-          </button>
+
+          {/* Leaderboard Toggle */}
+          <div className="mt-3 flex justify-end">
+            <button
+              onClick={() => setShowLeaderboard(!showLeaderboard)}
+              className="px-4 py-2 bg-redhat-dark-elevated hover:bg-redhat-red border border-redhat-grid-line hover:border-redhat-red rounded font-mono text-xs uppercase tracking-wider transition"
+            >
+              {showLeaderboard ? 'Hide' : 'Show'} Leaderboard
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         {showLeaderboard && (
           <div className="mb-8">
             <Leaderboard apiUrl={API_URL} />
@@ -146,9 +186,10 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 py-6 border-t border-gray-800 text-center text-sm text-gray-500">
-        <p>Powered by Red Hat OpenShift AI</p>
-        <p className="mt-1">Built with open source - React, FastAPI, vLLM</p>
+      <footer className="bg-redhat-dark-surface border-t border-redhat-grid-line mt-8 py-4 relative z-10">
+        <div className="container mx-auto px-4 text-center font-mono text-redhat-text-tertiary text-xs uppercase tracking-wider">
+          <p>Built with open source technologies | Red Hat AI - Four Pillars Demo</p>
+        </div>
       </footer>
     </div>
   )
