@@ -49,8 +49,8 @@ class GameSession(BaseModel):
 
 class LeaderboardEntry(BaseModel):
     """Leaderboard entry"""
-    rank: int
     name: str
     score: int
     accuracy: float
-    date: str
+    rank: Optional[int] = None
+    date: Optional[str] = None

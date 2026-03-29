@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const CATEGORIES = [
   { value: 'customer_review', label: 'Customer Review', icon: '⭐' },
@@ -9,7 +9,9 @@ const CATEGORIES = [
 
 export default function GameScreen({ session, currentPair, guessResult, loading, onGuess, onContinue, onEndGame }) {
   const [categoryIndex, setCategoryIndex] = useState(0)
-  const [showDifficultyUp, setShowDifficultyUp] = useState(false)
+  const [showNotification, setShowNotification] = useState(false)
+  const [notificationMessage, setNotificationMessage] = useState('')
+  const [notificationType, setNotificationType] = useState('success') // success or error
 
   const categoryInfo = CATEGORIES.find(c => c.value === currentPair?.category) || CATEGORIES[categoryIndex]
 
@@ -17,10 +19,27 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
     ? Math.round((session.correct_guesses / session.total_guesses) * 100)
     : 0
 
-  // Auto end game when lives reach 0
-  if (session.lives === 0 && guessResult) {
-    setTimeout(() => onEndGame(), 2000)
-  }
+  // Auto-advance after showing result
+  useEffect(() => {
+    if (guessResult) {
+      // Show notification
+      setNotificationMessage(guessResult.explanation)
+      setNotificationType(guessResult.correct ? 'success' : 'error')
+      setShowNotification(true)
+
+      // Auto-advance or end game
+      if (session.lives === 0) {
+        const timeout = setTimeout(() => onEndGame(), 2000)
+        return () => clearTimeout(timeout)
+      } else {
+        const timeout = setTimeout(() => {
+          setShowNotification(false)
+          onContinue(getNextCategory())
+        }, 2000) // 2 seconds to read feedback
+        return () => clearTimeout(timeout)
+      }
+    }
+  }, [guessResult])
 
   // Get next category in cycle
   const getNextCategory = () => {
@@ -30,7 +49,20 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto relative">
+      {/* Toast Notification */}
+      {showNotification && (
+        <div className={`fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg border-2 transition-all ${
+          notificationType === 'success'
+            ? 'bg-green-900 bg-opacity-90 border-green-400 text-green-100'
+            : 'bg-redhat-red bg-opacity-90 border-redhat-red text-white'
+        }`}>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">{notificationType === 'success' ? '✓' : '✗'}</span>
+            <p className="font-mono text-sm">{notificationMessage}</p>
+          </div>
+        </div>
+      )}
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
         <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
@@ -98,8 +130,8 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
           <div className="grid md:grid-cols-2 gap-6">
             {/* Option A */}
             <button
-              onClick={() => !guessResult && onGuess('a')}
-              disabled={loading || guessResult}
+              onClick={() => !guessResult && !loading && onGuess('a')}
+              disabled={loading || guessResult || session.lives === 0}
               className={`bg-redhat-dark-elevated border-2 p-6 rounded-lg text-left transition transform hover:scale-105 ${
                 !guessResult && !loading ? 'hover:border-redhat-red cursor-pointer border-redhat-grid-line' : 'border-redhat-grid-line'
               } ${
@@ -123,8 +155,8 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
 
             {/* Option B */}
             <button
-              onClick={() => !guessResult && onGuess('b')}
-              disabled={loading || guessResult}
+              onClick={() => !guessResult && !loading && onGuess('b')}
+              disabled={loading || guessResult || session.lives === 0}
               className={`bg-redhat-dark-elevated border-2 p-6 rounded-lg text-left transition transform hover:scale-105 ${
                 !guessResult && !loading ? 'hover:border-redhat-red cursor-pointer border-redhat-grid-line' : 'border-redhat-grid-line'
               } ${
@@ -149,35 +181,6 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
         </div>
       )}
 
-      {/* Result Feedback */}
-      {guessResult && (
-        <div className={`p-6 rounded-lg mb-6 border-2 ${
-          guessResult.correct ? 'bg-green-900 bg-opacity-20 border-green-400' : 'bg-redhat-red bg-opacity-10 border-redhat-red'
-        }`}>
-          <div className="text-center">
-            <div className="text-4xl font-display mb-3">
-              {guessResult.correct ? '🎉 Correct!' : '❌ Incorrect'}
-            </div>
-            <p className="text-lg mb-4 text-redhat-text-primary">{guessResult.explanation}</p>
-            <div className="flex justify-center gap-4">
-              {session.lives > 0 && (
-                <button
-                  onClick={() => onContinue(getNextCategory())}
-                  className="px-6 py-3 bg-redhat-red hover:bg-redhat-red-hover border border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
-                >
-                  Next Challenge
-                </button>
-              )}
-              <button
-                onClick={onEndGame}
-                className="px-6 py-3 bg-redhat-dark-elevated border border-redhat-grid-line hover:border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
-              >
-                {session.lives === 0 ? 'View Results' : 'End Game'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Loading State */}
       {loading && !currentPair && (
