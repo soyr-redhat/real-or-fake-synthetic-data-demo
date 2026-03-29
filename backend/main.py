@@ -36,6 +36,7 @@ real_data = RealDataLibrary()
 # In-memory session storage (can be replaced with Redis in production)
 active_sessions: Dict[str, GameSession] = {}
 current_pairs: Dict[str, DataPair] = {}
+pair_to_session: Dict[str, str] = {}  # Maps pair_id to session_id
 
 # Leaderboard storage
 LEADERBOARD_FILE = Path(os.getenv("LEADERBOARD_PATH", "./data/leaderboard.json"))
@@ -120,6 +121,7 @@ async def generate_pair(session_id: str, category: DataCategory):
     )
 
     current_pairs[pair.id] = pair
+    pair_to_session[pair.id] = session_id  # Track which session owns this pair
 
     # Return pair without revealing the answer
     return {
@@ -138,14 +140,12 @@ async def submit_guess(guess: GuessRequest):
 
     pair = current_pairs[guess.pair_id]
 
-    # Find the session that owns this pair
-    session = None
-    for s in active_sessions.values():
-        session = s
-        break
-
-    if not session:
+    # Get the session that owns this pair
+    session_id = pair_to_session.get(guess.pair_id) or guess.session_id
+    if not session_id or session_id not in active_sessions:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    session = active_sessions[session_id]
 
     correct = guess.guessed_option == pair.real_option
 

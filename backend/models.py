@@ -29,6 +29,7 @@ class GuessRequest(BaseModel):
     """User's guess for which data is real"""
     pair_id: str
     guessed_option: Literal["a", "b"]
+    session_id: Optional[str] = None  # Session ID to identify the player
 
 class GuessResponse(BaseModel):
     """Response to user's guess"""

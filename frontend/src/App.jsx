@@ -61,7 +61,8 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           pair_id: currentPair.id,
-          guessed_option: option
+          guessed_option: option,
+          session_id: session.session_id
         })
       })
       const result = await response.json()
