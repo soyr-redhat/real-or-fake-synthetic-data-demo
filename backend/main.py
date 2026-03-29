@@ -163,10 +163,22 @@ async def submit_guess(guess: GuessRequest):
         session.lives -= 1  # Lose a life on wrong answer
         score_delta = 0
 
+    # Auto-increase difficulty based on score
+    difficulty_increased = False
+    old_difficulty = session.difficulty
+    if session.difficulty == DifficultyLevel.EASY and session.score >= 50:
+        session.difficulty = DifficultyLevel.MEDIUM
+        difficulty_increased = True
+    elif session.difficulty == DifficultyLevel.MEDIUM and session.score >= 150:
+        session.difficulty = DifficultyLevel.HARD
+        difficulty_increased = True
+
     # Generate explanation
     explanation = f"The real {pair.category.value} was option {pair.real_option.upper()}. "
     if correct:
         explanation += f"Great job! You earned {score_delta} points (streak bonus: {session.streak}x)."
+        if difficulty_increased:
+            explanation += f" 🎉 DIFFICULTY INCREASED to {session.difficulty.value.upper()}!"
     else:
         explanation += f"Better luck next time! Your streak has been reset. Lives remaining: {session.lives}"
         if session.lives == 0:

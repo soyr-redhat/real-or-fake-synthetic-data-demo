@@ -28,16 +28,19 @@ export default function StartScreen({ onStart, loading }) {
           </div>
           <div className="bg-redhat-dark-elevated border border-redhat-grid-line p-6 rounded-lg">
             <div className="text-4xl mb-3 font-display text-redhat-red">03</div>
-            <h4 className="font-display font-semibold mb-2 text-redhat-text-primary">Learn & Score</h4>
+            <h4 className="font-display font-semibold mb-2 text-redhat-text-primary">Progress & Score</h4>
             <p className="text-sm text-redhat-text-secondary font-text">
-              Get instant feedback, build your streak, and climb the leaderboard!
+              Categories cycle automatically. Difficulty increases as you score points. Build streaks for bonus points!
             </p>
           </div>
         </div>
       </div>
 
       <div className="mb-8">
-        <h3 className="text-2xl font-display font-semibold mb-4 text-redhat-red">Select Difficulty</h3>
+        <h3 className="text-2xl font-display font-semibold mb-4 text-redhat-red">Select Starting Difficulty</h3>
+        <p className="text-sm text-redhat-text-tertiary font-mono text-center mb-4">
+          💡 Difficulty auto-increases: Easy (0pts) → Medium (50pts) → Hard (150pts)
+        </p>
         <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
           <button
             onClick={() => onStart('easy')}
@@ -82,12 +85,12 @@ export default function StartScreen({ onStart, loading }) {
       </div>
 
       <div className="bg-redhat-dark-surface border border-redhat-grid-line rounded-lg p-6 max-w-2xl mx-auto">
-        <h4 className="font-semibold mb-3 text-redhat-text-primary">Data Categories You'll See:</h4>
-        <div className="flex flex-wrap justify-center gap-3 text-sm font-mono">
-          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">Customer Reviews</span>
-          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">Product Descriptions</span>
-          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">User Profiles</span>
-          <span className="bg-redhat-dark-elevated border border-redhat-grid-line px-4 py-2 rounded-full">Code Snippets</span>
+        <h4 className="font-semibold mb-3 text-redhat-text-primary">Game Rules:</h4>
+        <div className="space-y-2 text-sm text-redhat-text-secondary font-text text-left">
+          <p>❤️ <strong className="text-redhat-text-primary">3 Lives:</strong> Lose one per wrong answer. Game over when lives reach 0.</p>
+          <p>🔄 <strong className="text-redhat-text-primary">Auto-Cycling:</strong> Categories rotate automatically (Reviews → Descriptions → Profiles → Code)</p>
+          <p>📈 <strong className="text-redhat-text-primary">Progressive Difficulty:</strong> Harder challenges unlock as you score points</p>
+          <p>🔥 <strong className="text-redhat-text-primary">Streak Bonus:</strong> Consecutive correct answers earn extra points!</p>
         </div>
       </div>
     </div>

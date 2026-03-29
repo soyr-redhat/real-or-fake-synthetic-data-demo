@@ -8,9 +8,10 @@ const CATEGORIES = [
 ]
 
 export default function GameScreen({ session, currentPair, guessResult, loading, onGuess, onContinue, onEndGame }) {
-  const [selectedCategory, setSelectedCategory] = useState('customer_review')
+  const [categoryIndex, setCategoryIndex] = useState(0)
+  const [showDifficultyUp, setShowDifficultyUp] = useState(false)
 
-  const categoryInfo = CATEGORIES.find(c => c.value === currentPair?.category) || CATEGORIES[0]
+  const categoryInfo = CATEGORIES.find(c => c.value === currentPair?.category) || CATEGORIES[categoryIndex]
 
   const accuracy = session.total_guesses > 0
     ? Math.round((session.correct_guesses / session.total_guesses) * 100)
@@ -19,6 +20,13 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
   // Auto end game when lives reach 0
   if (session.lives === 0 && guessResult) {
     setTimeout(() => onEndGame(), 2000)
+  }
+
+  // Get next category in cycle
+  const getNextCategory = () => {
+    const nextIndex = (categoryIndex + 1) % CATEGORIES.length
+    setCategoryIndex(nextIndex)
+    return CATEGORIES[nextIndex].value
   }
 
   return (
@@ -53,33 +61,28 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
         </div>
       </div>
 
-      {/* Category Selector */}
+      {/* Category Progress Indicator */}
       <div className="mb-6">
-        <h3 className="text-lg font-display font-semibold mb-3 text-redhat-red">Select Category:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {CATEGORIES.map(cat => (
-            <button
+        <div className="flex items-center justify-center gap-3">
+          {CATEGORIES.map((cat, idx) => (
+            <div
               key={cat.value}
-              onClick={() => {
-                setSelectedCategory(cat.value)
-                if (guessResult) {
-                  onContinue(cat.value)
-                }
-              }}
-              disabled={loading && !guessResult}
-              className={`p-3 rounded-lg border-2 transition ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition ${
                 currentPair?.category === cat.value
-                  ? 'bg-redhat-red border-redhat-red text-white'
-                  : selectedCategory === cat.value && !currentPair
+                  ? 'bg-redhat-red border-redhat-red text-white scale-110'
+                  : idx === categoryIndex && !currentPair
                   ? 'bg-redhat-red bg-opacity-20 border-redhat-red'
-                  : 'bg-redhat-dark-elevated border-redhat-grid-line hover:border-redhat-red'
+                  : 'bg-redhat-dark-elevated border-redhat-grid-line opacity-50'
               }`}
             >
-              <div className="text-2xl mb-1">{cat.icon}</div>
-              <div className="text-sm">{cat.label}</div>
-            </button>
+              <span className="text-xl">{cat.icon}</span>
+              <span className="text-xs font-mono hidden md:inline">{cat.label}</span>
+            </div>
           ))}
         </div>
+        <p className="text-center mt-3 text-redhat-text-tertiary font-mono text-xs uppercase tracking-wider">
+          Categories cycle automatically • Current: {categoryInfo.label}
+        </p>
       </div>
 
       {/* Main Comparison */}
@@ -159,7 +162,7 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
             <div className="flex justify-center gap-4">
               {session.lives > 0 && (
                 <button
-                  onClick={() => onContinue(selectedCategory)}
+                  onClick={() => onContinue(getNextCategory())}
                   className="px-6 py-3 bg-redhat-red hover:bg-redhat-red-hover border border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold transition"
                 >
                   Next Challenge

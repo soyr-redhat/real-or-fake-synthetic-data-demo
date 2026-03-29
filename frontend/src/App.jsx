@@ -129,6 +129,17 @@ function App() {
                     </div>
                     <div className="text-xs text-gray-400">Accuracy</div>
                   </div>
+                  <div className="text-gray-600 font-bold text-xl">|</div>
+                  <div className="text-center">
+                    <div className={`font-bold text-lg font-mono uppercase ${
+                      session.difficulty === 'easy' ? 'text-green-400' :
+                      session.difficulty === 'medium' ? 'text-yellow-400' :
+                      'text-redhat-red'
+                    }`}>
+                      {session.difficulty === 'easy' ? '🟢' : session.difficulty === 'medium' ? '🟡' : '🔴'}
+                    </div>
+                    <div className="text-xs text-gray-400">{session.difficulty}</div>
+                  </div>
                 </div>
               </div>
             )}

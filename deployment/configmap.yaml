@@ -5,5 +5,8 @@ metadata:
   labels:
     app: real-or-fake
 data:
-  llm-api-url: "https://litellm-litemaas.apps.prod.rhoai.rh-aiservices-bu.com/v1"
-  model-name: "Mistral-Small-24B-W8A8"
+  llm-api-url: "http://maas.apps.ocp.cloud.rhai-tmm.dev/kimi-k25/kimi-k2-5/v1"
+  model-name: "kimi-k2-5"
+  # Game settings
+  medium-difficulty-threshold: "50"
+  hard-difficulty-threshold: "150"
