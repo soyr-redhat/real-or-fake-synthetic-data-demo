@@ -80,7 +80,11 @@ function App() {
   }
 
   const continueToNext = (category) => {
-    loadNextPair(session.session_id, category)
+    // Don't load next pair if game is over
+    if (session && session.lives > 0) {
+      setGuessResult(null) // Clear guess result before loading next
+      loadNextPair(session.session_id, category)
+    }
   }
 
   const endGame = () => {

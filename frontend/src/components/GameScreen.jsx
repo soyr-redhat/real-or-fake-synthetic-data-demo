@@ -29,7 +29,10 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
 
       // Auto-advance or end game
       if (session.lives === 0) {
-        const timeout = setTimeout(() => onEndGame(), 2000)
+        const timeout = setTimeout(() => {
+          console.log('Game over - navigating to results')
+          onEndGame()
+        }, 2500) // Give 2.5 seconds to see game over message
         return () => clearTimeout(timeout)
       } else {
         const timeout = setTimeout(() => {
@@ -39,7 +42,7 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
         return () => clearTimeout(timeout)
       }
     }
-  }, [guessResult])
+  }, [guessResult, session.lives])
 
   // Get next category in cycle
   const getNextCategory = () => {
@@ -52,14 +55,19 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
     <div className="max-w-6xl mx-auto relative">
       {/* Toast Notification */}
       {showNotification && (
-        <div className={`fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg border-2 transition-all ${
+        <div className={`fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg border-2 transition-all max-w-2xl ${
           notificationType === 'success'
             ? 'bg-green-900 bg-opacity-90 border-green-400 text-green-100'
             : 'bg-redhat-red bg-opacity-90 border-redhat-red text-white'
         }`}>
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{notificationType === 'success' ? '✓' : '✗'}</span>
-            <p className="font-mono text-sm">{notificationMessage}</p>
+            <span className="text-2xl">{notificationType === 'success' ? '✓' : session.lives === 0 ? '💀' : '✗'}</span>
+            <div className="flex-1">
+              <p className="font-mono text-sm">{notificationMessage}</p>
+              {session.lives === 0 && (
+                <p className="font-display font-bold text-lg mt-2">Redirecting to results...</p>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -118,7 +126,7 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
       </div>
 
       {/* Main Comparison */}
-      {currentPair && (
+      {currentPair && session.lives > 0 && (
         <div className="mb-6">
           <div className="text-center mb-6">
             <h2 className="text-3xl font-display font-bold mb-2 text-redhat-text-primary">
@@ -182,8 +190,27 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
       )}
 
 
+      {/* Game Over State */}
+      {session.lives === 0 && !loading && (
+        <div className="text-center py-12">
+          <div className="bg-redhat-red bg-opacity-20 border-2 border-redhat-red rounded-lg p-8">
+            <div className="text-6xl mb-4">💀</div>
+            <h3 className="text-3xl font-display font-bold text-redhat-red mb-4">Game Over!</h3>
+            <p className="text-redhat-text-secondary font-mono mb-6">
+              You ran out of lives. Final Score: {session.score}
+            </p>
+            <button
+              onClick={onEndGame}
+              className="px-8 py-4 bg-redhat-red hover:bg-redhat-red-hover border border-redhat-red rounded-lg font-mono uppercase tracking-wider font-semibold text-lg transition"
+            >
+              View Results
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Loading State */}
-      {loading && !currentPair && (
+      {loading && !currentPair && session.lives > 0 && (
         <div className="text-center py-12">
           <div className="animate-spin inline-block w-12 h-12 border-4 border-redhat-red border-t-transparent rounded-full mb-4"></div>
           <p className="text-redhat-text-secondary font-mono">Generating data pair...</p>
