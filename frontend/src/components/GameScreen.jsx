@@ -12,12 +12,30 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
   const [showNotification, setShowNotification] = useState(false)
   const [notificationMessage, setNotificationMessage] = useState('')
   const [notificationType, setNotificationType] = useState('success') // success or error
+  const [prevScore, setPrevScore] = useState(session.score)
+  const [prevLives, setPrevLives] = useState(session.lives)
+  const [scoreChanged, setScoreChanged] = useState(false)
+  const [livesChanged, setLivesChanged] = useState(false)
 
   const categoryInfo = CATEGORIES.find(c => c.value === currentPair?.category) || CATEGORIES[categoryIndex]
 
   const accuracy = session.total_guesses > 0
     ? Math.round((session.correct_guesses / session.total_guesses) * 100)
     : 0
+
+  // Detect stat changes for animation
+  useEffect(() => {
+    if (session.score !== prevScore) {
+      setScoreChanged(true)
+      setPrevScore(session.score)
+      setTimeout(() => setScoreChanged(false), 400)
+    }
+    if (session.lives !== prevLives) {
+      setLivesChanged(true)
+      setPrevLives(session.lives)
+      setTimeout(() => setLivesChanged(false), 400)
+    }
+  }, [session.score, session.lives])
 
   // Auto-advance after showing result
   useEffect(() => {
@@ -32,13 +50,13 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
         const timeout = setTimeout(() => {
           console.log('Game over - navigating to results')
           onEndGame()
-        }, 2500) // Give 2.5 seconds to see game over message
+        }, 3000) // Give 3 seconds to see game over message
         return () => clearTimeout(timeout)
       } else {
         const timeout = setTimeout(() => {
           setShowNotification(false)
           onContinue(getNextCategory())
-        }, 2000) // 2 seconds to read feedback
+        }, 3000) // 3 seconds to see feedback and updated stats
         return () => clearTimeout(timeout)
       }
     }
@@ -74,13 +92,13 @@ export default function GameScreen({ session, currentPair, guessResult, loading,
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
         <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
-          <div className="text-2xl font-mono font-bold text-redhat-red">
+          <div className={`text-2xl font-mono font-bold text-redhat-red ${livesChanged ? 'stat-update' : ''}`}>
             {session.lives > 0 ? '❤️'.repeat(session.lives) : '💀'}
           </div>
           <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Lives</div>
         </div>
         <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">
-          <div className="text-2xl font-mono font-bold text-redhat-red">{session.score}</div>
+          <div className={`text-2xl font-mono font-bold text-redhat-red ${scoreChanged ? 'stat-update' : ''}`}>{session.score}</div>
           <div className="text-xs text-redhat-text-tertiary font-mono uppercase tracking-wider">Score</div>
         </div>
         <div className="bg-redhat-dark-elevated border border-redhat-grid-line rounded-lg p-4 text-center">

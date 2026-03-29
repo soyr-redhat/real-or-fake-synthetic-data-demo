@@ -65,12 +65,14 @@ function App() {
         })
       })
       const result = await response.json()
-      setGuessResult(result)
 
-      // Update session
+      // Update session FIRST
       const sessionResponse = await fetch(`${API_URL}/session/${session.session_id}`)
       const updatedSession = await sessionResponse.json()
       setSession(updatedSession)
+
+      // Set guess result AFTER session is updated
+      setGuessResult(result)
     } catch (error) {
       console.error('Failed to submit guess:', error)
       alert('Failed to submit guess. Please try again.')
@@ -79,11 +81,11 @@ function App() {
     }
   }
 
-  const continueToNext = (category) => {
+  const continueToNext = async (category) => {
     // Don't load next pair if game is over
     if (session && session.lives > 0) {
       setGuessResult(null) // Clear guess result before loading next
-      loadNextPair(session.session_id, category)
+      await loadNextPair(session.session_id, category)
     }
   }
 
