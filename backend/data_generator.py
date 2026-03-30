@@ -168,20 +168,51 @@ Write 10-20 lines that look like they came from a real GitHub repository."""
             return result["choices"][0]["message"]["content"].strip()
 
     def _fallback_generation(self, category: DataCategory, real_sample: str) -> str:
-        """Fallback generation if LLM fails"""
+        """Fallback generation if LLM fails - return more realistic alternatives"""
+        import random
+
         if category == DataCategory.CUSTOMER_REVIEW:
-            return "This product exceeded my expectations. The quality is outstanding and delivery was fast. Highly recommend to anyone looking for a reliable option. Five stars!"
+            fallbacks = [
+                "got this for my tablet and works perfectly. been using it for about 2 weeks now, no complaints so far. the only thing is i wish it came with a longer cable but thats not a dealbreaker",
+                "Ordered this bc it was on sale for $24.99 and honestly pretty happy with the purchase. Setup took like 10 mins but after that its been solid. Would def buy again",
+                "Works great in my phone, no issues. Fast shipping too which was nice. Only complaint is the packaging was kinda excessive but whatever, the product itself is good"
+            ]
+            return random.choice(fallbacks)
         elif category == DataCategory.PRODUCT_DESCRIPTION:
-            return "Premium quality wireless headphones featuring advanced noise cancellation technology. Enjoy crystal-clear audio with up to 30 hours of battery life. Perfect for work, travel, or leisure."
+            fallbacks = [
+                "Universal Compatibility — Works with all USB enabled devices including smartphones, tablets, laptops and more. Fast Charging Support — Supports up to 3A fast charging for rapid power delivery. Durable Design — Premium braided cable with reinforced connectors tested for 10,000+ bends. Extended Length — 1.5 meter cable provides convenient reach without tangling.",
+                "High Speed Data Transfer: Transfer files at up to 480Mbps for quick syncing. Premium Materials: Aircraft-grade aluminum connectors with nylon braided jacket for maximum durability. Multi-Device Support: Compatible with Android, iOS, Windows, and Mac devices. Warranty: 18 month manufacturer warranty included.",
+                "Fast Wireless Connectivity — Dual-band support for 2.4GHz and 5GHz networks with speeds up to 300Mbps. Compact Design — Ultra-portable nano adapter fits in your laptop without blocking adjacent ports. Wide Compatibility — Supports Windows 10/8.1/8/7, Mac OS X 10.9 and later."
+            ]
+            return random.choice(fallbacks)
         elif category == DataCategory.USER_PROFILE:
-            return "Tech enthusiast and coffee lover. Passionate about AI, open source, and building cool stuff. Always learning something new!"
+            fallbacks = [
+                "software dev who writes bugs for a living lol. coffee addict. probably debugging something rn. he/him",
+                "part time student, full time overthinker. trying to learn guitar (its not going well). playlist curator. they/them",
+                "former teacher turned freelance writer bc capitalism. plant parent to 12 succulents. chronically online. she/her"
+            ]
+            return random.choice(fallbacks)
         else:  # CODE_SNIPPET
-            return """def process_items(items, threshold=10):
-    \"\"\"Process items and filter based on threshold.\"\"\"
-    result = []
-    for item in items:
-        if item > threshold:
-            result.append(item * 2)
-        else:
-            result.append(item)
-    return result"""
+            fallbacks = [
+                """def validate_email(email):
+    \"\"\"Check if email address is valid.\"\"\"
+    if not email or '@' not in email:
+        return False
+    parts = email.split('@')
+    if len(parts) != 2:
+        return False
+    return len(parts[0]) > 0 and len(parts[1]) > 0""",
+                """def format_price(amount, currency='USD'):
+    \"\"\"Format price with currency symbol.\"\"\"
+    symbols = {'USD': '$', 'EUR': '€', 'GBP': '£'}
+    symbol = symbols.get(currency, '$')
+    return f"{symbol}{amount:.2f}" """,
+                """def filter_active_users(users):
+    \"\"\"Return only active users from list.\"\"\"
+    active = []
+    for user in users:
+        if user.get('active', False):
+            active.append(user)
+    return active"""
+            ]
+            return random.choice(fallbacks)
