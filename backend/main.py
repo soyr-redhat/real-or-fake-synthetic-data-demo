@@ -73,21 +73,28 @@ async def generate_cached_pair(category: DataCategory, difficulty: DifficultyLev
 
 async def refill_cache(category: DataCategory, difficulty: DifficultyLevel, count: int = 1):
     """Background task to refill the cache"""
+    key = (category, difficulty)
+
+    # Initialize cache if needed
     async with cache_lock:
-        key = (category, difficulty)
         if key not in pair_cache:
             pair_cache[key] = []
 
-        print(f"Refilling cache for {category.value}/{difficulty.value} - generating {count} pairs")
+    print(f"Refilling cache for {category.value}/{difficulty.value} - generating {count} pairs")
 
-        for _ in range(count):
-            try:
-                pair = await generate_cached_pair(category, difficulty)
+    for _ in range(count):
+        try:
+            # Generate WITHOUT holding the lock (this takes 3-8 seconds)
+            pair = await generate_cached_pair(category, difficulty)
+
+            # Only lock when adding to cache (fast operation)
+            async with cache_lock:
                 pair_cache[key].append(pair)
-            except Exception as e:
-                print(f"Error generating cached pair: {e}")
-                break
+        except Exception as e:
+            print(f"Error generating cached pair: {e}")
+            break
 
+    async with cache_lock:
         print(f"Cache now has {len(pair_cache[key])} pairs for {category.value}/{difficulty.value}")
 
 async def get_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -> Tuple[DataPair, bool]:
