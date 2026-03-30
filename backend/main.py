@@ -172,32 +172,25 @@ async def get_session(session_id: str):
     return active_sessions[session_id]
 
 @app.post("/pair/generate")
-async def generate_pair(session_id: str, category: DataCategory):
-    """Generate a new data pair for comparison"""
+async def generate_pair(session_id: str, category: DataCategory, background_tasks: BackgroundTasks):
+    """Generate a new data pair for comparison (from cache if available)"""
     if session_id not in active_sessions:
         raise HTTPException(status_code=404, detail="Session not found")
 
     session = active_sessions[session_id]
 
-    # Get real data sample
-    real_sample = real_data.get_sample(category, session.difficulty)
+    # Get pair from cache or generate on-the-fly
+    pair, from_cache = await get_cached_pair(category, session.difficulty)
 
-    # Generate synthetic data
-    synthetic_sample = await generator.generate_synthetic(category, session.difficulty, real_sample)
+    # Check cache size and refill if needed
+    key = (category, session.difficulty)
+    async with cache_lock:
+        current_size = len(pair_cache.get(key, []))
 
-    # Randomly assign to option a or b
-    import random
-    real_is_a = random.choice([True, False])
-
-    pair = DataPair(
-        id=str(uuid.uuid4()),
-        category=category,
-        difficulty=session.difficulty,
-        option_a=real_sample if real_is_a else synthetic_sample,
-        option_b=synthetic_sample if real_is_a else real_sample,
-        real_option="a" if real_is_a else "b",
-        synthetic_prompt=generator.last_prompt
-    )
+    if current_size < CACHE_MIN_SIZE:
+        # Refill cache in background
+        refill_count = CACHE_TARGET_SIZE - current_size
+        background_tasks.add_task(refill_cache, category, session.difficulty, refill_count)
 
     current_pairs[pair.id] = pair
     pair_to_session[pair.id] = session_id  # Track which session owns this pair
@@ -208,7 +201,8 @@ async def generate_pair(session_id: str, category: DataCategory):
         "category": pair.category,
         "difficulty": pair.difficulty,
         "option_a": pair.option_a,
-        "option_b": pair.option_b
+        "option_b": pair.option_b,
+        "from_cache": from_cache  # For debugging
     }
 
 @app.post("/guess")
