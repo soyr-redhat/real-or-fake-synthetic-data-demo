@@ -45,12 +45,40 @@ pair_cache: Dict[Tuple[DataCategory, DifficultyLevel], List[DataPair]] = {}
 cache_lock = asyncio.Lock()
 CACHE_MIN_SIZE = 5  # Minimum pairs to keep in cache
 CACHE_TARGET_SIZE = 15  # Target cache size to pre-generate
-STARTUP_WAIT_SIZE = 3  # Wait for this many on startup (fast start)
-STARTUP_TOTAL_SIZE = 15  # Total to generate on startup (rest in background)
 
-# Leaderboard storage
-LEADERBOARD_FILE = Path(os.getenv("LEADERBOARD_PATH", "./data/leaderboard.json"))
-LEADERBOARD_FILE.parent.mkdir(parents=True, exist_ok=True)
+# Storage paths
+DATA_DIR = Path(os.getenv("DATA_PATH", "./data"))
+LEADERBOARD_FILE = DATA_DIR / "leaderboard.json"
+CACHE_DIR = DATA_DIR / "cache"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+def get_cache_file(category: DataCategory, difficulty: DifficultyLevel) -> Path:
+    """Get cache file path for a category/difficulty combination"""
+    return CACHE_DIR / f"{category.value}_{difficulty.value}.json"
+
+def save_cache_to_disk(category: DataCategory, difficulty: DifficultyLevel, pairs: List[DataPair]):
+    """Save cache to disk"""
+    try:
+        cache_file = get_cache_file(category, difficulty)
+        data = [pair.model_dump() for pair in pairs]
+        with open(cache_file, 'w') as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Error saving cache to disk: {e}")
+
+def load_cache_from_disk(category: DataCategory, difficulty: DifficultyLevel) -> List[DataPair]:
+    """Load cache from disk"""
+    try:
+        cache_file = get_cache_file(category, difficulty)
+        if not cache_file.exists():
+            return []
+        with open(cache_file, 'r') as f:
+            data = json.load(f)
+        return [DataPair(**pair_data) for pair_data in data]
+    except Exception as e:
+        print(f"Error loading cache from disk: {e}")
+        return []
 
 async def generate_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -> DataPair:
     """Generate a single pair and cache it"""
@@ -90,6 +118,8 @@ async def refill_cache(category: DataCategory, difficulty: DifficultyLevel, coun
             # Only lock when adding to cache (fast operation)
             async with cache_lock:
                 pair_cache[key].append(pair)
+                # Save to disk after each generation
+                save_cache_to_disk(category, difficulty, pair_cache[key])
         except Exception as e:
             print(f"Error generating cached pair: {e}")
             break
@@ -106,6 +136,8 @@ async def get_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -
             pair = pair_cache[key].pop(0)
             cache_size = len(pair_cache[key])
             print(f"Served from cache, {cache_size} pairs remaining")
+            # Save updated cache to disk
+            save_cache_to_disk(category, difficulty, pair_cache[key])
             return pair, True
 
     # Cache miss - generate on the fly
@@ -115,20 +147,28 @@ async def get_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -
 
 @app.on_event("startup")
 async def startup_event():
-    """Pre-generate pairs on startup (all in background)"""
-    print("Starting background cache generation...")
+    """Load cache from disk and generate more if needed"""
+    print("Loading cache from disk...")
 
-    # Pre-generate for common combinations (all in background, don't wait)
     categories = [DataCategory.CUSTOMER_REVIEW, DataCategory.PRODUCT_DESCRIPTION,
                   DataCategory.CODE_SNIPPET]
     difficulties = [DifficultyLevel.EASY, DifficultyLevel.MEDIUM, DifficultyLevel.HARD]
 
+    # Load existing cache from disk
     for category in categories:
         for difficulty in difficulties:
-            # Generate cache in background, don't wait
-            asyncio.create_task(refill_cache(category, difficulty, count=STARTUP_TOTAL_SIZE))
+            key = (category, difficulty)
+            loaded_pairs = load_cache_from_disk(category, difficulty)
+            pair_cache[key] = loaded_pairs
+            print(f"Loaded {len(loaded_pairs)} cached pairs for {category.value}/{difficulty.value}")
 
-    print(f"App ready! Cache generation started in background ({STARTUP_TOTAL_SIZE} pairs per combination)")
+            # Only generate if cache is below minimum
+            if len(loaded_pairs) < CACHE_MIN_SIZE:
+                needed = CACHE_TARGET_SIZE - len(loaded_pairs)
+                print(f"Cache low for {category.value}/{difficulty.value}, generating {needed} more pairs in background")
+                asyncio.create_task(refill_cache(category, difficulty, count=needed))
+
+    print("App ready! Cache loaded from disk.")
 
 def load_leaderboard() -> List[Dict]:
     """Load leaderboard from file"""
