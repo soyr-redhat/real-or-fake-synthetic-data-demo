@@ -3,12 +3,14 @@ Real or Fake - Synthetic Data Generation Demo
 Version: 1.0.0
 Last Updated: 2026-03-27
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import json
 import os
 import uuid
+import random
+import asyncio
 from datetime import datetime
 from pathlib import Path
 from models import (
@@ -38,9 +40,86 @@ active_sessions: Dict[str, GameSession] = {}
 current_pairs: Dict[str, DataPair] = {}
 pair_to_session: Dict[str, str] = {}  # Maps pair_id to session_id
 
+# Pre-generated pair cache: {(category, difficulty): [DataPair, ...]}
+pair_cache: Dict[Tuple[DataCategory, DifficultyLevel], List[DataPair]] = {}
+cache_lock = asyncio.Lock()
+CACHE_MIN_SIZE = 3  # Minimum pairs to keep in cache
+CACHE_TARGET_SIZE = 10  # Target cache size to pre-generate
+
 # Leaderboard storage
 LEADERBOARD_FILE = Path(os.getenv("LEADERBOARD_PATH", "./data/leaderboard.json"))
 LEADERBOARD_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+async def generate_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -> DataPair:
+    """Generate a single pair and cache it"""
+    real_sample = real_data.get_sample(category, difficulty)
+    synthetic_sample = await generator.generate_synthetic(category, difficulty, real_sample)
+
+    real_is_a = random.choice([True, False])
+
+    pair = DataPair(
+        id=str(uuid.uuid4()),
+        category=category,
+        difficulty=difficulty,
+        option_a=real_sample if real_is_a else synthetic_sample,
+        option_b=synthetic_sample if real_is_a else real_sample,
+        real_option="a" if real_is_a else "b",
+        synthetic_prompt=generator.last_prompt
+    )
+
+    return pair
+
+async def refill_cache(category: DataCategory, difficulty: DifficultyLevel, count: int = 1):
+    """Background task to refill the cache"""
+    async with cache_lock:
+        key = (category, difficulty)
+        if key not in pair_cache:
+            pair_cache[key] = []
+
+        print(f"Refilling cache for {category.value}/{difficulty.value} - generating {count} pairs")
+
+        for _ in range(count):
+            try:
+                pair = await generate_cached_pair(category, difficulty)
+                pair_cache[key].append(pair)
+            except Exception as e:
+                print(f"Error generating cached pair: {e}")
+                break
+
+        print(f"Cache now has {len(pair_cache[key])} pairs for {category.value}/{difficulty.value}")
+
+async def get_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -> Tuple[DataPair, bool]:
+    """Get a pair from cache, returns (pair, from_cache)"""
+    key = (category, difficulty)
+
+    async with cache_lock:
+        if key in pair_cache and len(pair_cache[key]) > 0:
+            pair = pair_cache[key].pop(0)
+            cache_size = len(pair_cache[key])
+            print(f"Served from cache, {cache_size} pairs remaining")
+            return pair, True
+
+    # Cache miss - generate on the fly
+    print(f"Cache miss for {category.value}/{difficulty.value}, generating on-the-fly")
+    pair = await generate_cached_pair(category, difficulty)
+    return pair, False
+
+@app.on_event("startup")
+async def startup_event():
+    """Pre-generate pairs on startup"""
+    print("Pre-generating pair cache...")
+
+    # Pre-generate for common combinations
+    categories = [DataCategory.CUSTOMER_REVIEW, DataCategory.PRODUCT_DESCRIPTION,
+                  DataCategory.CODE_SNIPPET]
+    difficulties = [DifficultyLevel.EASY, DifficultyLevel.MEDIUM, DifficultyLevel.HARD]
+
+    for category in categories:
+        for difficulty in difficulties:
+            # Generate 2 pairs for each combination on startup (quick start)
+            asyncio.create_task(refill_cache(category, difficulty, count=2))
+
+    print("Cache pre-generation started in background")
 
 def load_leaderboard() -> List[Dict]:
     """Load leaderboard from file"""
