@@ -126,7 +126,7 @@ CRITICAL - Include these characteristics:
 - Triple-quoted docstrings with proper formatting
 - Common patterns: .get() with defaults, list comprehensions, early returns
 - Error handling or validation checks
-- Python idioms (using 'or {}' for defaults, '.strip().lower()' for normalization)
+- Python idioms (using 'or {{}}' for defaults, '.strip().lower()' for normalization)
 
 Write 10-20 lines that look like they came from a real GitHub repository."""
 
