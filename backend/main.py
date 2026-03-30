@@ -47,11 +47,15 @@ CACHE_MIN_SIZE = 5  # Minimum pairs to keep in cache
 CACHE_TARGET_SIZE = 15  # Target cache size to pre-generate
 
 # Storage paths
-DATA_DIR = Path(os.getenv("DATA_PATH", "./data"))
+DATA_DIR = Path(os.getenv("DATA_PATH", "/data"))
 LEADERBOARD_FILE = DATA_DIR / "leaderboard.json"
 CACHE_DIR = DATA_DIR / "cache"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+# Create cache directory if it doesn't exist
+try:
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create cache directory: {e}")
 
 def get_cache_file(category: DataCategory, difficulty: DifficultyLevel) -> Path:
     """Get cache file path for a category/difficulty combination"""
