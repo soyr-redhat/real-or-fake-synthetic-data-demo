@@ -43,8 +43,9 @@ pair_to_session: Dict[str, str] = {}  # Maps pair_id to session_id
 # Pre-generated pair cache: {(category, difficulty): [DataPair, ...]}
 pair_cache: Dict[Tuple[DataCategory, DifficultyLevel], List[DataPair]] = {}
 cache_lock = asyncio.Lock()
-CACHE_MIN_SIZE = 3  # Minimum pairs to keep in cache
+CACHE_MIN_SIZE = 5  # Minimum pairs to keep in cache
 CACHE_TARGET_SIZE = 10  # Target cache size to pre-generate
+STARTUP_CACHE_SIZE = 8  # Pre-generate this many on startup
 
 # Leaderboard storage
 LEADERBOARD_FILE = Path(os.getenv("LEADERBOARD_PATH", "./data/leaderboard.json"))
@@ -107,19 +108,24 @@ async def get_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -
 @app.on_event("startup")
 async def startup_event():
     """Pre-generate pairs on startup"""
-    print("Pre-generating pair cache...")
+    print(f"Pre-generating pair cache ({STARTUP_CACHE_SIZE} pairs per category/difficulty)...")
 
     # Pre-generate for common combinations
     categories = [DataCategory.CUSTOMER_REVIEW, DataCategory.PRODUCT_DESCRIPTION,
                   DataCategory.CODE_SNIPPET]
     difficulties = [DifficultyLevel.EASY, DifficultyLevel.MEDIUM, DifficultyLevel.HARD]
 
+    # Create all cache refill tasks
+    tasks = []
     for category in categories:
         for difficulty in difficulties:
-            # Generate 2 pairs for each combination on startup (quick start)
-            asyncio.create_task(refill_cache(category, difficulty, count=2))
+            task = asyncio.create_task(refill_cache(category, difficulty, count=STARTUP_CACHE_SIZE))
+            tasks.append(task)
 
-    print("Cache pre-generation started in background")
+    # Wait for initial cache to be populated before accepting requests
+    print("Waiting for initial cache population...")
+    await asyncio.gather(*tasks)
+    print(f"Cache pre-generation complete! {len(categories) * len(difficulties) * STARTUP_CACHE_SIZE} pairs ready")
 
 def load_leaderboard() -> List[Dict]:
     """Load leaderboard from file"""
