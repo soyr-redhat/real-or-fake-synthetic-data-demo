@@ -108,33 +108,20 @@ async def get_cached_pair(category: DataCategory, difficulty: DifficultyLevel) -
 
 @app.on_event("startup")
 async def startup_event():
-    """Pre-generate pairs on startup"""
-    print(f"Pre-generating initial cache ({STARTUP_WAIT_SIZE} pairs per combination, waiting)...")
+    """Pre-generate pairs on startup (all in background)"""
+    print("Starting background cache generation...")
 
-    # Pre-generate for common combinations
+    # Pre-generate for common combinations (all in background, don't wait)
     categories = [DataCategory.CUSTOMER_REVIEW, DataCategory.PRODUCT_DESCRIPTION,
                   DataCategory.CODE_SNIPPET]
     difficulties = [DifficultyLevel.EASY, DifficultyLevel.MEDIUM, DifficultyLevel.HARD]
 
-    # First, wait for a small initial cache (fast startup)
-    initial_tasks = []
     for category in categories:
         for difficulty in difficulties:
-            task = asyncio.create_task(refill_cache(category, difficulty, count=STARTUP_WAIT_SIZE))
-            initial_tasks.append(task)
+            # Generate cache in background, don't wait
+            asyncio.create_task(refill_cache(category, difficulty, count=STARTUP_TOTAL_SIZE))
 
-    print("Waiting for initial cache (3 pairs each)...")
-    await asyncio.gather(*initial_tasks)
-    total_initial = len(categories) * len(difficulties) * STARTUP_WAIT_SIZE
-    print(f"Initial cache ready! {total_initial} pairs available. App is now responsive.")
-
-    # Continue filling cache in background (don't wait)
-    remaining = STARTUP_TOTAL_SIZE - STARTUP_WAIT_SIZE
-    if remaining > 0:
-        print(f"Continuing to pre-generate {remaining} more pairs per combination in background...")
-        for category in categories:
-            for difficulty in difficulties:
-                asyncio.create_task(refill_cache(category, difficulty, count=remaining))
+    print(f"App ready! Cache generation started in background ({STARTUP_TOTAL_SIZE} pairs per combination)")
 
 def load_leaderboard() -> List[Dict]:
     """Load leaderboard from file"""
