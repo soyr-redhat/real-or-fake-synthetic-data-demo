@@ -73,11 +73,11 @@ class DataGenerator:
     def _code_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for code snippet"""
         if difficulty == DifficultyLevel.EASY:
-            return "Write a simple Python function with basic logic. Use generic variable names and perfect formatting."
+            return "Write a simple Python function with a COMPLETE implementation including the function body. The function should do something basic like list operations, string manipulation, or simple calculations. Use generic variable names and perfect formatting. Include the full working code, not just a signature. 5-10 lines."
         elif difficulty == DifficultyLevel.MEDIUM:
-            return f"Write a Python function similar to this style: '{real_sample}'. Make it realistic with some comments. 5-10 lines."
+            return f"Write a Python function similar to this style: '{real_sample}'. Include the COMPLETE implementation with actual logic in the function body. Make it realistic with some comments and docstrings. Must have working code, not just signatures. 8-15 lines."
         else:  # HARD
-            return f"Write Python code matching this style: '{real_sample}'. Include realistic variable names, potential edge cases, and make it look like production code. 8-15 lines."
+            return f"Write Python code matching this style: '{real_sample}'. Include the FULL implementation with realistic variable names, complete logic, potential edge cases, and make it look like production code from a real repository. Must include actual working implementation, not placeholders or 'pass' statements. 10-20 lines."
 
     async def _call_llm(self, prompt: str, difficulty: DifficultyLevel) -> str:
         """Call the LLM API to generate text"""
@@ -118,8 +118,12 @@ class DataGenerator:
         elif category == DataCategory.USER_PROFILE:
             return "Tech enthusiast and coffee lover. Passionate about AI, open source, and building cool stuff. Always learning something new!"
         else:  # CODE_SNIPPET
-            return """def calculate_average(numbers):
-    # Calculate the average of a list of numbers
-    if not numbers:
-        return 0
-    return sum(numbers) / len(numbers)"""
+            return """def process_items(items, threshold=10):
+    \"\"\"Process items and filter based on threshold.\"\"\"
+    result = []
+    for item in items:
+        if item > threshold:
+            result.append(item * 2)
+        else:
+            result.append(item)
+    return result"""

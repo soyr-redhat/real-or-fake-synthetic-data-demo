@@ -11,42 +11,65 @@ class RealDataLibrary:
         self.data = {
             DataCategory.CUSTOMER_REVIEW: {
                 DifficultyLevel.EASY: [
-                    "great product would buy again",
-                    "not worth the money tbh, broke after 2 weeks :(",
-                    "Pretty good I guess. Does what it says",
-                    "LOVE THIS!! best purchase ever!!!",
-                    "meh its ok nothing special"
+                    "Great product, would buy again!",
+                    "Not worth the money.",
+                    "Works great in a Samsung Galaxy S3.",
+                    "Fast, very fast",
+                    "Good quality, would recommend",
+                    "It does the job.",
+                    "Best breakfast buffet!!!",
+                    "Will be back again!",
+                    "Food arrived quickly!",
+                    "Highly recommended.",
+                    "Loved it...friendly servers, great food, wonderful and imaginative menu.",
+                    "The fries were great too.",
+                    "Omelets to die for!",
+                    "Everything was fresh and delicious!",
+                    "A great touch."
                 ],
                 DifficultyLevel.MEDIUM: [
-                    "So I was skeptical at first but after using it for a month I'm actually impressed. Battery life could be better tho.",
-                    "Works well enough for the price point. Setup was a bit confusing but customer service helped me out. 4/5",
-                    "idk why ppl are complaining, mine works perfectly fine lol been using daily for 3 months",
-                    "Would give 5 stars but shipping took forever and box was damaged. Product itself is solid though",
-                    "Not bad! My only complaint is its a little bulky for what I needed but otherwise no issues"
+                    "Purchased this for my device, it worked as advertised. You can never have too much phone memory, since I download a lot of stuff this was a no brainer for me.",
+                    "Works in a HTC Rezound. Was running short of space on a 64GB Sandisk so I ordered this when it came out, fast and no issues.",
+                    "It works, but file writes are a bit slower than expected on a USB3 reader. Also, both reads and writes are FASTER with the card inside the standard-size SD adapter.",
+                    "I have it in my phone and it never skips a beat. File transfers are speedy and have not had any corruption issues or memory fade issues as I would expect from the Sandisk brand.",
+                    "got this because i had a 2 GB one that filled up. i kept getting the insufficient disk space on my phone. my kids take my phone and do selfies. mostly my daughter. Now I have plenty of space.",
+                    "Stopped by during the late May bank holiday off Rick Steve recommendation and loved it.",
+                    "The potatoes were like rubber and you could tell they had been made up ahead of time being kept under a warmer.",
+                    "The cashier had no care what so ever on what I had to say it still ended up being wayyy overpriced.",
+                    "Waitress was a little slow in service.",
+                    "The selection on the menu was great and so were the prices."
                 ],
                 DifficultyLevel.HARD: [
-                    "Ok so first off let me say I NEVER write reviews but this deserved one. Got it as a gift for my wife and she literally uses it every single day. Only weird thing is it makes this clicking noise sometimes? Not a dealbreaker but kinda annoying. Overall tho def recommend if ur on the fence about it",
-                    "Honestly expected more for the price but its fine I guess. The color is slightly different than the photos (more of a navy than royal blue) and it feels cheaper than I thought itd be. Still works tho so whatever. Shipping was fast at least",
-                    "UPDATE: changing my review from 3 to 5 stars!! I initially had issues getting it to connect to my wifi but turns out I was just doing it wrong lmao. Once I figured it out (shoutout to the youtube tutorials) it's been amazing. Super intuitive and my kids love it too",
-                    "been using this for my small business for about 6 months now and honestly cant imagine going back to the old setup. Yes its pricey but the time it saves me is worth every penny. My only gripe is the mobile app is kinda buggy on Android but the desktop version is perfect",
-                    "so i bought this bc everyone on tiktok was raving about it and i was like ok lemme see what the hype is about... and yeah its actually pretty good?? like not life-changing but definitely worth it. also it came with a cute little carrying case which was a nice surprise lol"
+                    "It's hard to believe how affordable digital has become. 32 GB in a device one quarter the size of postage stamp would have been science fiction less than a generation ago. I picked this up for portable music when I didn't want to schlep (or risk) a phone or iPod. Works great with all SD card readers. Select with confidence.",
+                    "I bought this to use with my go pro hero 3 black edition. It requires a class 10 MicroSDXC card. So far I've had no issues with it. Fast read/write, came with adapter, small packaging, but that's all it needed! Comes with a nice hard plastic case to keep both dry and together if needed.",
+                    "Ordered this for a Galaxy S3. Lasted a few months and then broke. Is not accessible on several different PC's. Says 'limited lifetime' warranty - BS. You have ONE MONTH for Eco Zone. Not only did I lose pictures but now I am out $$ because of a crappy return policy. UPDATE: Amazon Customer service made good and refunded my purchase price. I still will not be buying any more Sandisk memory cards however...",
+                    "I got this because I just couldn't pass up the deal, $17.99. It has been incredibly fast in my HTC Sensation 4g. Pictures are taken and saved instantaneously. Only had it a few days, but have been very happy. Shipping was fast and the packaging was easy to open which is always great in my book. Only issue I had was I had to format it on my computer first before my phone was able to recognize it.",
+                    "I bought two of these one for my Samsung tablet and one for my samsung galaxy note. Great hardware that is truly speedy, responsive and meets my needs! I purchased this after my wife and I bought our Samsung Galaxy S4 to store all the music, pictures and videos. The S4 camera is capable of capturing 16-megapixels photos so the 16GB microSD that I had will not suffice.",
+                    "My side Greek salad with the Greek dressing was so tasty, and the pita and hummus was very refreshing.",
+                    "He came running after us when he realized my husband had left his sunglasses on the table.",
+                    "Coming here is like experiencing an underwhelming relationship where both parties can't wait for the other person to ask to break up.",
+                    "It's like a really sexy party in your mouth, where you're outrageously flirting with the hottest person at the party.",
+                    "walked in and the place smelled like an old grease trap and only 2 others there eating."
                 ]
             },
             DataCategory.PRODUCT_DESCRIPTION: {
                 DifficultyLevel.EASY: [
-                    "Wireless Bluetooth Speaker with LED lights. Portable and rechargeable. Great sound quality.",
-                    "Stainless steel water bottle. Keeps drinks cold for 24 hours. BPA free and leak proof.",
-                    "Ergonomic office chair with lumbar support. Adjustable height and armrests. Black mesh design."
+                    "1m long Type-C USB Cable. Sturdy and Durable. With USB cable you can transfer data with speeds of upto 480 Mbps. Upto 3A output. 6 months warranty.",
+                    "1M Long Cable. Usb 2.0 (Type A) Toughened Joints. Strong And Sturdy.",
+                    "USB Type-C to Type-C cable with universal compatibility. 1m Length & Reversible design. High Speed Data/Charging with USB 2.0.",
+                    "Micro usb cable is 1 meter in length, optimized for easy use for your comfort at home or office."
                 ],
                 DifficultyLevel.MEDIUM: [
-                    "Meet your new favorite coffee maker. This sleek, programmable brewer delivers barista-quality coffee at the touch of a button. Features a built-in grinder, thermal carafe, and customizable brew strength. Start your mornings right.",
-                    "Transform your living space with our ultra-soft microfiber throw blanket. Available in 12 rich colors, this versatile blanket is perfect for cozy nights on the couch or adding a pop of color to your bedroom. Machine washable for easy care.",
-                    "Elevate your cooking game with this professional-grade chef's knife. Hand-forged from high-carbon German steel, it features a razor-sharp edge that holds its precision through years of use. The ergonomic pakkawood handle ensures comfort and control."
+                    "Compatible with all Type C enabled devices, be it an android smartphone (Mi, Samsung, Oppo, Vivo, Realme, OnePlus, etc), tablet, laptop (Macbook, Chromebook, etc). Supports Quick Charging (2.0/3.0). Unbreakable – Made of special braided outer with rugged interior bindings, it is ultra-durable cable that won't be affected by daily rough usage.",
+                    "The boAt Deuce USB 300 2 in 1 cable is compatible with smartphones, tablets, PC peripherals, Bluetooth speakers, power banks and all other devices with Type-C as well as Micro USB port. It ensures 3A fast charging and data transmissions with rapid sync at 480 mbps. The premium Nylon braided skin makes it sturdy and invincible against external damage.",
+                    "Flexible, lightweight HDMI cable for connecting media devices to playback display such as HDTVs, projectors, and more. Compatible with Blu-Ray players, computers, Apple TV, Roku, cable, PS4, Xbox One, and other HDMI-compatible devices. Solid copper conductors and full metal jacket shielding for durability and high-performance connectivity.",
+                    "USB WiFi Adapter — Speedy wireless transmission at up to 150Mbps ideal for video streaming or internet calls. Mini Design — Sleek miniature design so small that once plugged in, can be left in a Laptop's USB port. Advanced Security — Supports 64/128 WEP, WPA, PA2/WPA-PSK/WPA2-PSK(TKIP/AES)."
                 ],
                 DifficultyLevel.HARD: [
-                    "Introducing the NightVision Pro 4K Security Camera - your 24/7 guardian. Cutting-edge AI detection distinguishes between people, pets, and vehicles, eliminating false alerts. Crystal-clear 4K resolution captures every detail, while advanced night vision illuminates up to 30 feet in complete darkness. Weatherproof construction stands up to any climate, and two-way audio lets you communicate from anywhere. Works seamlessly with Alexa and Google Home. Protect what matters most with professional-grade security made simple.",
-                    "Discover the freedom of wireless. These next-gen earbuds deliver studio-quality sound with adaptive noise cancellation that adjusts to your environment. Transparency mode keeps you connected when you need to be, while spatial audio creates an immersive listening experience. With 8 hours of playtime per charge (32 hours with the case), quick-charge functionality, and IPX7 water resistance, they're built for your lifestyle. Three sizes of silicone tips ensure the perfect fit. Your music, your way.",
-                    "Experience comfort redefined with our premium memory foam mattress. Engineered with three layers of CertiPUR-US certified foam, it contours to your body while providing optimal spinal alignment. The cooling gel-infused top layer regulates temperature throughout the night, while the high-density support core ensures durability for years to come. Hypoallergenic and dust-mite resistant cover is removable and machine washable. Available in all standard sizes. 100-night trial with free returns. Sleep better, live better."
+                    "Universal Compatibility – It is compatible with all Micro USB enabled devices, be it an android smartphone, tablet, PC peripheral or any other micro USB compatible device. Unbreakable – Made of special braided outer with rugged interior bindings, it is ultra-durable cable that won't be affected by daily rough usage. Ideal Length – It has ideal length of 1.5 meters which is neither too short like your typical 1meter cable or too long like a 2meters cable. Supports maximum 3A fast charging and 480 Mbps data transfer speed.",
+                    "High Speed WiFi — Up to 600Mbps speeds with 200Mbps on 2.4GHz and 433 Mbps on 5GHz, upgrades your devices to higher AC WiFi speeds. Dual Band Wireless — 2.4GHz and 5GHz band for flexible connectivity, upgrades your devices to work with the latest dual-band WiFi router for faster speed and extended range. Nano design — Small, unobtrusive design allows you to plug it in and forget it is even there. Operating System — Supports Windows 11/10/8.1/8/7/XP, Mac OS 10.15 and earlier.",
+                    "Fast Charging & Data Sync: Solero MB301 micro USB cable supports fast charge up to 5V/3A for devices and data syncing speed up to 480Mbps. Universal Compatibility: This USB charging cable connects micro USB port devices with standard USB port devices like laptops, hard drives, power banks, wall and car chargers, etc. Rough & Tough USB Cable: Charging cable with a double-braided exterior, premium aramid fiber core and metal plugs. It has passed 10,000 bending tests and can easily withstand daily use. Extended Length: 1.5-meter long micro USB data and charging cable use nylon material to protect the wire and avoid knots.",
+                    "3A/QC 3.0 FAST CHARGING and DATA SYNC: This USB C cable supports QC 3.0 Fast Charging and Data Syncing, max current 3.0A and transfer speed up to 480Mbps. Built-in 56K pull-up resistor and strong metal connections provides reliable conductivity and stability. Nylon Braided Tangle-free Design: Premium Nylon Braided Type C Cable/Lead adds additional durability and tangle free with a tested lifespan of 10000+ bending test. SAFE & RELIABLE: High-purity copper wire features anti-oxidation and anti-rust, which will keep long-lasting fast charging performance."
                 ]
             },
             DataCategory.USER_PROFILE: {
@@ -82,7 +105,21 @@ print(total)""",
     return f"Hello, {name}!"
 
 message = greet("World")
-print(message)"""
+print(message)""",
+
+                    """def proxy_type(self):
+    \"\"\"
+    Returns proxy type as `ProxyType`.
+    \"\"\"
+    return self.proxyType""",
+
+                    """def __rdivmod__(self, *args, **kwargs):
+    \"\"\" Return divmod(value, self). \"\"\"
+    pass""",
+
+                    """def Name(self):
+    \"\"\"Return the name corresponding to an object.\"\"\"
+    return that"""
                 ],
                 DifficultyLevel.MEDIUM: [
                     """def calculate_discount(price, discount_percent):
@@ -115,7 +152,30 @@ def load_config(filepath):
         return config
     except FileNotFoundError:
         print(f"Config file not found: {filepath}")
-        return {}"""
+        return {}""",
+
+                    """@staticmethod
+def _to_list(x: Optional[Any]) -> List[Any]:
+    \"\"\"Convert object to a list if it is not a list, `None` converted to empty list.\"\"\"
+    if x is None:
+        x = []
+    return x""",
+
+                    """def get_kinetic_matrix(self):
+    \"\"\"Kinetic matrix.\"\"\"
+    return self._kinetic_matrix
+
+def set_preferred_dgps_timeout(self, timeout):
+    '''set the preferred DGPS timeout for receiver'''
+    self.preferred_dgps_timeout = timeout
+    if timeout is not None:
+        return True""",
+
+                    """constraints = []
+
+def add_constraint(constraint):
+    constraints.append(constraint)
+    return len(constraints)"""
                 ],
                 DifficultyLevel.HARD: [
                     """def process_user_data(raw_data, filters=None):
@@ -184,7 +244,36 @@ def load_config(filepath):
             if attempt == max_retries - 1:
                 raise
             wait_time = 2 ** attempt  # Exponential backoff
-            await asyncio.sleep(wait_time)"""
+            await asyncio.sleep(wait_time)""",
+
+                    """@staticmethod
+def get_backtrack_config(curr_config, updated_config):
+    diff = DatabaseOptions.get_options_diff(curr_config, updated_config)
+    bt_config = {}
+    for option in diff:
+        if option in curr_config:
+            bt_config[option] = curr_config[option]
+    return bt_config""",
+
+                    """def test_validate_without_timesheet(self):
+    # employee creates a leave request
+    number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
+    holiday = self.Requests.with_user(self.user_employee).create({
+        'name': 'Leave Request',
+        'holiday_status_id': self.leave_type.id,
+        'date_from': self.leave_start_datetime,
+        'date_to': self.leave_end_datetime,
+        'number_of_days': number_of_days,
+    })
+    return holiday""",
+
+                    """def get(self):
+    \"\"\"Return the result of calling the function or reraise any exceptions
+    that were raised.
+    \"\"\"
+    if self._exception is not None:
+        raise self._exception
+    return self._result"""
                 ]
             }
         }
