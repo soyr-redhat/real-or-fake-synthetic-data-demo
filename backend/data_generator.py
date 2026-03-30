@@ -50,7 +50,19 @@ class DataGenerator:
         elif difficulty == DifficultyLevel.MEDIUM:
             return f"Write a customer review similar to this one in style and tone: '{real_sample}'. Make it realistic but don't copy it. Include natural language quirks. 2-4 sentences."
         else:  # HARD
-            return f"Write a customer review that sounds extremely authentic and human-written. Study this example: '{real_sample}'. Match the informal tone, include typos or casual grammar if present, and make it indistinguishable from real reviews. 2-4 sentences."
+            return f"""Write an authentic customer review matching this style: '{real_sample}'.
+
+CRITICAL - Include these human characteristics:
+- Specific product details (model names, prices like $19.99, specific phone/device models)
+- Personal context and anecdotes (family members, use cases, "I bought this because...")
+- Minor typos or casual grammar ("tho", "bc", lowercase i, extra letters like "wayyy")
+- Updates or contradictions ("UPDATE:", changing opinion)
+- Vivid metaphors or creative comparisons
+- Mixed emotions (praise + complaint)
+- Conversational asides ("in my book", "just saying", "honestly")
+- Specific numbers (used for 3 months, $17.99, 16-megapixel camera)
+
+Write 3-5 sentences that sound like a real person sharing their genuine experience."""
 
     def _product_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for product description"""
@@ -59,7 +71,19 @@ class DataGenerator:
         elif difficulty == DifficultyLevel.MEDIUM:
             return f"Write a product description similar to this style: '{real_sample}'. Make it engaging and realistic. 2-4 sentences."
         else:  # HARD
-            return f"Write a highly authentic product description matching this style: '{real_sample}'. Include specific details, marketing language, and make it indistinguishable from real product copy. 3-4 sentences."
+            return f"""Write a technical product description matching this style: '{real_sample}'.
+
+CRITICAL - Include these characteristics:
+- Very specific technical specs (480Mbps, 5V/3A, 56K resistor, exact measurements)
+- Compatibility lists with version numbers (Windows 11/10/8.1/8/7, Mac OS 10.15)
+- Certification/testing details (passed 10,000 bending tests, UL certified)
+- Marketing formatting with em-dashes (—) and colons
+- Title Case section headers followed by colons (Fast Charging & Data Sync:, Universal Compatibility:)
+- Brand names and model numbers
+- Multiple feature callouts in bullet-point style prose
+- Technical terminology (pull-up resistor, aramid fiber, dual-band wireless)
+
+Write 3-4 sentences formatted like real Amazon/e-commerce copy."""
 
     def _profile_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for user profile"""
@@ -68,7 +92,20 @@ class DataGenerator:
         elif difficulty == DifficultyLevel.MEDIUM:
             return f"Write a user profile bio similar to this one: '{real_sample}'. Make it sound natural and authentic. 1-3 sentences."
         else:  # HARD
-            return f"Write a highly realistic user profile bio matching this style: '{real_sample}'. Include personality quirks, specific interests, and make it indistinguishable from a real person's bio. 2-3 sentences."
+            return f"""Write an authentic social media bio matching this style: '{real_sample}'.
+
+CRITICAL - Include these characteristics:
+- Mostly lowercase casual style ("bc", "lol", "rn", "ur", "prob")
+- Parenthetical asides with humor ("send help", "it explains everything", "obviously")
+- Pronouns explicitly listed (he/him, she/they, they/them)
+- Pop culture references (specific shows, musicians, trends)
+- Self-deprecating or ironic humor
+- Very specific numbers (47th time, 37 plants, 3 cats)
+- Internet slang and abbreviations (TBR, cottagecore, chronically online)
+- Mix of career/identity statements with personal quirks
+- Astrology references if relevant (pisces sun, virgo moon)
+
+Write 2-3 sentences that sound like a real person's Twitter/Instagram bio."""
 
     def _code_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for code snippet"""
@@ -77,7 +114,21 @@ class DataGenerator:
         elif difficulty == DifficultyLevel.MEDIUM:
             return f"Write a Python function similar to this style: '{real_sample}'. Include the COMPLETE implementation with actual logic in the function body. Make it realistic with some comments and docstrings. Must have working code, not just signatures. 8-15 lines."
         else:  # HARD
-            return f"Write Python code matching this style: '{real_sample}'. Include the FULL implementation with realistic variable names, complete logic, potential edge cases, and make it look like production code from a real repository. Must include actual working implementation, not placeholders or 'pass' statements. 10-20 lines."
+            return f"""Write production-quality Python code matching this style: '{real_sample}'.
+
+CRITICAL - Include these characteristics:
+- FULL working implementation with complete logic (no 'pass' or '...' placeholders)
+- Edge case handling (check for None, empty lists, invalid input)
+- Inline comments explaining complex logic (# Skip inactive users, # Invalid email)
+- Realistic variable names from actual codebases (processed, raw_data, filters)
+- Dictionary/object construction and manipulation
+- Type hints if the example has them (Optional[str], List[dict])
+- Triple-quoted docstrings with proper formatting
+- Common patterns: .get() with defaults, list comprehensions, early returns
+- Error handling or validation checks
+- Python idioms (using 'or {}' for defaults, '.strip().lower()' for normalization)
+
+Write 10-20 lines that look like they came from a real GitHub repository."""
 
     async def _call_llm(self, prompt: str, difficulty: DifficultyLevel) -> str:
         """Call the LLM API to generate text"""
@@ -87,6 +138,13 @@ class DataGenerator:
             DifficultyLevel.EASY: 0.3,    # Lower temp = more predictable
             DifficultyLevel.MEDIUM: 0.7,  # Medium temp = balanced
             DifficultyLevel.HARD: 0.9,    # Higher temp = more creative/human-like
+        }
+
+        # Adjust max_tokens based on difficulty (HARD needs more for detailed output)
+        max_tokens_map = {
+            DifficultyLevel.EASY: 150,
+            DifficultyLevel.MEDIUM: 250,
+            DifficultyLevel.HARD: 400,  # More tokens for detailed human-like content
         }
 
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -102,7 +160,7 @@ class DataGenerator:
                         {"role": "user", "content": prompt}
                     ],
                     "temperature": temperature_map.get(difficulty, 0.7),
-                    "max_tokens": 200
+                    "max_tokens": max_tokens_map.get(difficulty, 250)
                 }
             )
             response.raise_for_status()
