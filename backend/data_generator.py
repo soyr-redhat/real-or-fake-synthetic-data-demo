@@ -52,17 +52,16 @@ class DataGenerator:
         else:  # HARD
             return f"""Write an authentic customer review matching this style: '{real_sample}'.
 
-CRITICAL - Include these human characteristics:
-- Specific product details (model names, prices like $19.99, specific phone/device models)
-- Personal context and anecdotes (family members, use cases, "I bought this because...")
-- Minor typos or casual grammar ("tho", "bc", lowercase i, extra letters like "wayyy")
-- Updates or contradictions ("UPDATE:", changing opinion)
+Include 2-3 human characteristics from this list:
+- Specific product details (model names, prices like $19.99, device models)
+- Personal context ("I bought this bc...", family members, use cases)
+- Casual grammar ("tho", "bc", lowercase i, "wayyy")
 - Vivid metaphors or creative comparisons
 - Mixed emotions (praise + complaint)
-- Conversational asides ("in my book", "just saying", "honestly")
-- Specific numbers (used for 3 months, $17.99, 16-megapixel camera)
+- Conversational asides ("honestly", "just saying")
+- Specific numbers (3 months, $17.99, 16-megapixel)
 
-Write 3-5 sentences that sound like a real person sharing their genuine experience."""
+IMPORTANT: Write EXACTLY 2-3 sentences maximum. Be concise."""
 
     def _product_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for product description"""
@@ -73,17 +72,15 @@ Write 3-5 sentences that sound like a real person sharing their genuine experien
         else:  # HARD
             return f"""Write a technical product description matching this style: '{real_sample}'.
 
-CRITICAL - Include these characteristics:
-- Very specific technical specs (480Mbps, 5V/3A, 56K resistor, exact measurements)
-- Compatibility lists with version numbers (Windows 11/10/8.1/8/7, Mac OS 10.15)
-- Certification/testing details (passed 10,000 bending tests, UL certified)
-- Marketing formatting with em-dashes (—) and colons
-- Title Case section headers followed by colons (Fast Charging & Data Sync:, Universal Compatibility:)
-- Brand names and model numbers
-- Multiple feature callouts in bullet-point style prose
-- Technical terminology (pull-up resistor, aramid fiber, dual-band wireless)
+Include 2-3 characteristics from this list:
+- Specific technical specs (480Mbps, 5V/3A, exact measurements)
+- Compatibility lists (Windows 11/10/8.1/8/7, Mac OS 10.15)
+- Testing details (passed 10,000 bending tests, certified)
+- Title Case headers with colons (Fast Charging:, Universal Compatibility:)
+- Marketing em-dashes (—) between features
+- Brand names and technical terminology
 
-Write 3-4 sentences formatted like real Amazon/e-commerce copy."""
+IMPORTANT: Write EXACTLY 2-3 sentences maximum in e-commerce style."""
 
     def _profile_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for user profile"""
@@ -94,18 +91,17 @@ Write 3-4 sentences formatted like real Amazon/e-commerce copy."""
         else:  # HARD
             return f"""Write an authentic social media bio matching this style: '{real_sample}'.
 
-CRITICAL - Include these characteristics:
-- Mostly lowercase casual style ("bc", "lol", "rn", "ur", "prob")
-- Parenthetical asides with humor ("send help", "it explains everything", "obviously")
-- Pronouns explicitly listed (he/him, she/they, they/them)
-- Pop culture references (specific shows, musicians, trends)
-- Self-deprecating or ironic humor
-- Very specific numbers (47th time, 37 plants, 3 cats)
-- Internet slang and abbreviations (TBR, cottagecore, chronically online)
-- Mix of career/identity statements with personal quirks
-- Astrology references if relevant (pisces sun, virgo moon)
+Include 2-3 characteristics from this list:
+- Lowercase casual style ("bc", "lol", "rn", "ur", "prob")
+- Parenthetical asides ("send help", "it explains everything")
+- Pronouns (he/him, she/they, they/them)
+- Pop culture references (shows, musicians, trends)
+- Self-deprecating humor
+- Specific numbers (47th time, 37 plants)
+- Internet slang (TBR, cottagecore, chronically online)
+- Career/identity with personal quirks
 
-Write 2-3 sentences that sound like a real person's Twitter/Instagram bio."""
+IMPORTANT: Write EXACTLY 2-3 short sentences maximum."""
 
     def _code_prompt(self, difficulty: DifficultyLevel, real_sample: str) -> str:
         """Generate prompt for code snippet"""
@@ -140,11 +136,11 @@ Write 10-20 lines that look like they came from a real GitHub repository."""
             DifficultyLevel.HARD: 0.9,    # Higher temp = more creative/human-like
         }
 
-        # Adjust max_tokens based on difficulty (HARD needs more for detailed output)
+        # Adjust max_tokens based on difficulty
         max_tokens_map = {
-            DifficultyLevel.EASY: 150,
-            DifficultyLevel.MEDIUM: 250,
-            DifficultyLevel.HARD: 400,  # More tokens for detailed human-like content
+            DifficultyLevel.EASY: 100,
+            DifficultyLevel.MEDIUM: 150,
+            DifficultyLevel.HARD: 200,  # Enough for 2-3 detailed sentences
         }
 
         async with httpx.AsyncClient(timeout=30.0) as client:
