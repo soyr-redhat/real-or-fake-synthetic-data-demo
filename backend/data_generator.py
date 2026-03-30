@@ -112,19 +112,14 @@ IMPORTANT: Write EXACTLY 2-3 short sentences maximum."""
         else:  # HARD
             return f"""Write production-quality Python code matching this style: '{real_sample}'.
 
-CRITICAL - Include these characteristics:
-- FULL working implementation with complete logic (no 'pass' or '...' placeholders)
-- Edge case handling (check for None, empty lists, invalid input)
-- Inline comments explaining complex logic (# Skip inactive users, # Invalid email)
-- Realistic variable names from actual codebases (processed, raw_data, filters)
-- Dictionary/object construction and manipulation
-- Type hints if the example has them (Optional[str], List[dict])
-- Triple-quoted docstrings with proper formatting
-- Common patterns: .get() with defaults, list comprehensions, early returns
-- Error handling or validation checks
-- Python idioms (using 'or {{}}' for defaults, '.strip().lower()' for normalization)
+Include these characteristics:
+- FULL working implementation (no 'pass' or '...' placeholders)
+- Edge case handling (check for None, empty lists)
+- Inline comments for complex logic
+- Realistic variable names (processed, raw_data, filters)
+- Python idioms (.get() with defaults, .strip().lower())
 
-Write 10-20 lines that look like they came from a real GitHub repository."""
+IMPORTANT: Write EXACTLY 8-12 lines of code maximum. Be concise but complete."""
 
     async def _call_llm(self, prompt: str, difficulty: DifficultyLevel) -> str:
         """Call the LLM API to generate text"""
