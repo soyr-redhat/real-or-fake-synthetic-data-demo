@@ -152,24 +152,22 @@ function App() {
               </div>
             )}
 
-            {/* Right: Powered by + Theme Toggle */}
+            {/* Right: Theme Toggle, Leaderboard, and Powered by */}
             <div className="flex flex-col items-end gap-2">
-              <ThemeToggle />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowLeaderboard(!showLeaderboard)}
+                  className="px-4 py-2 bg-redhat-dark-elevated hover:bg-redhat-red border border-redhat-grid-line hover:border-redhat-red rounded font-mono text-xs uppercase tracking-wider transition"
+                >
+                  {showLeaderboard ? 'Hide' : 'Show'} Leaderboard
+                </button>
+                <ThemeToggle />
+              </div>
               <div className="text-right">
                 <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
                 <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
               </div>
             </div>
-          </div>
-
-          {/* Leaderboard Toggle */}
-          <div className="mt-3 flex justify-end">
-            <button
-              onClick={() => setShowLeaderboard(!showLeaderboard)}
-              className="px-4 py-2 bg-redhat-dark-elevated hover:bg-redhat-red border border-redhat-grid-line hover:border-redhat-red rounded font-mono text-xs uppercase tracking-wider transition"
-            >
-              {showLeaderboard ? 'Hide' : 'Show'} Leaderboard
-            </button>
           </div>
         </div>
       </header>
