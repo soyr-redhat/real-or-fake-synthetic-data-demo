@@ -110,16 +110,12 @@ function App() {
       {/* Header */}
       <header className="bg-redhat-dark-surface border-b border-redhat-grid-line relative z-10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center mb-4">
+          <div className="grid grid-cols-3 items-center gap-4">
+            {/* Left: Title */}
             <div>
               <h1 className="text-3xl font-display font-bold text-redhat-red">Real or Fake?</h1>
               <p className="text-redhat-text-secondary mt-1 font-mono text-xs uppercase tracking-wider">Pillar 03 / Synthetic Data Generation Demo</p>
             </div>
-            <ThemeToggle />
-          </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            {/* Left: Empty for layout */}
-            <div></div>
 
             {/* Center: Session Stats */}
             {session && (
@@ -156,10 +152,13 @@ function App() {
               </div>
             )}
 
-            {/* Right: Powered by */}
-            <div className="text-right">
-              <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
-              <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
+            {/* Right: Powered by + Theme Toggle */}
+            <div className="flex flex-col items-end gap-2">
+              <ThemeToggle />
+              <div className="text-right">
+                <div className="text-sm font-mono text-redhat-text-tertiary uppercase tracking-wider">Powered by</div>
+                <div className="text-redhat-red font-display font-bold text-lg">Red Hat OpenShift AI</div>
+              </div>
             </div>
           </div>
 
