@@ -123,21 +123,21 @@ function App() {
                 <div className="bg-redhat-dark-elevated rounded-lg px-6 py-3 flex items-center gap-4 border border-redhat-grid-line">
                   <div className="text-center">
                     <div className="text-redhat-red font-bold text-2xl font-mono">{session.score}</div>
-                    <div className="text-xs text-gray-400">Score</div>
+                    <div className="text-xs text-redhat-text-secondary">Score</div>
                   </div>
-                  <div className="text-gray-600 font-bold text-xl">|</div>
+                  <div className="text-redhat-text-tertiary font-bold text-xl">|</div>
                   <div className="text-center">
                     <div className="text-yellow-400 font-bold text-2xl font-mono">{session.streak}</div>
-                    <div className="text-xs text-gray-400">Streak</div>
+                    <div className="text-xs text-redhat-text-secondary">Streak</div>
                   </div>
-                  <div className="text-gray-600 font-bold text-xl">|</div>
+                  <div className="text-redhat-text-tertiary font-bold text-xl">|</div>
                   <div className="text-center">
                     <div className="text-green-400 font-bold text-2xl font-mono">
                       {session.total_guesses > 0 ? Math.round((session.correct_guesses / session.total_guesses) * 100) : 0}%
                     </div>
-                    <div className="text-xs text-gray-400">Accuracy</div>
+                    <div className="text-xs text-redhat-text-secondary">Accuracy</div>
                   </div>
-                  <div className="text-gray-600 font-bold text-xl">|</div>
+                  <div className="text-redhat-text-tertiary font-bold text-xl">|</div>
                   <div className="text-center">
                     <div className={`font-bold text-lg font-mono uppercase ${
                       session.difficulty === 'easy' ? 'text-green-400' :
@@ -146,7 +146,7 @@ function App() {
                     }`}>
                       {session.difficulty === 'easy' ? '🟢' : session.difficulty === 'medium' ? '🟡' : '🔴'}
                     </div>
-                    <div className="text-xs text-gray-400">{session.difficulty}</div>
+                    <div className="text-xs text-redhat-text-secondary">{session.difficulty}</div>
                   </div>
                 </div>
               </div>
